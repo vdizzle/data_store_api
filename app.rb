@@ -3,6 +3,7 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__))
 require 'boot'
 require 'app/models'
 require 'app/routes'
+require 'app/extensions'
 
 module DataStoreApi
   class App < Sinatra::Base
