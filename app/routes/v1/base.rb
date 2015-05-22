@@ -6,7 +6,7 @@ module Routes
 
     configure do
       set :json_encoder, :to_json
-      set :views, File.join(ENV['APP_ROOT'], 'app/views')
+      set :views, File.join(ENV['APP_ROOT'], 'app/views/v1')
       set :show_exceptions, false
       set :raise_errors, false
     end
@@ -48,6 +48,15 @@ module Routes
       headers.each do |header|
         bad_request! "Invalid Header : #{header}" if env[header].blank?
       end
+    end
+
+    def json_params
+      begin
+        @json_body ||= JSON.parse(request.body.read).deep_symbolize_keys
+      rescue JSON::ParserError
+        bad_request! I18n.t('errors.parse_error')
+      end
+      @json_body
     end
   end
 end
