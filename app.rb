@@ -20,6 +20,8 @@ module DataStoreApi
       set :envronment, ENV['RACK']
     end
 
+    Apartment::Tenant.init
+
     use Routes::Health
     use Routes::V1::Uploads
   end
