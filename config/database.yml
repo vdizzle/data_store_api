@@ -1,5 +1,6 @@
 defaults: &defaults
   adapter: postgresql
+  schema_search_path: 'public,shared_extensions'
   encoding: unicode
   pool: 5
   database: "<%= ENV['DATABASE_NAME'] %>"
