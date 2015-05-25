@@ -1,10 +1,6 @@
 require 'warden'
 
 Warden::Strategies.add(:password) do
-  def valid?
-    params[:user][:username] && params[:user][:password]
-  end
-
   def authenticate!
     json_params = JSON.parse(request.body.read).deep_symbolize_keys rescue {}
     user = User.where(email: json_params[:user][:username]).last
