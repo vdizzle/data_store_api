@@ -35,14 +35,15 @@ module Extensions
 
       app.post '/auth/login' do
         env['warden'].authenticate!
-        puts session.inspect
-        json({ status: 'ok' })
+        json({
+          session_id: session['session_id'],
+          current_user_id: session['warden.user.default.key']
+        })
       end
 
       app.get '/auth/logout' do
         env['warden'].raw_session.inspect
         env['warden'].logout
-        puts session.inspect
         json({ status: 'ok' })
       end
     end
