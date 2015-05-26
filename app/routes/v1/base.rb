@@ -12,9 +12,12 @@ module Routes
     end
 
     before do
+      pass if %w(auth).include? request.path_info.split('/')[1]
+
       bad_request! 'Invalid API version' unless requested_api_version =~ /^1(\.?\d?)*/
       assert_header! 'HTTP_X_DATA_STORE_API_KEY'
       validate_api_client!
+      set_user_schema!
     end
 
     error Sinatra::NotFound do
@@ -25,6 +28,15 @@ module Routes
 
     def current_client
       @current_client ||= ApiKey.find_by_key(env['HTTP_X_DATA_STORE_API_KEY'])
+    end
+
+    def current_api_user_id
+      assert_header! 'HTTP_X_DATA_STORE_USER_ID'
+      request.env['HTTP_X_DATA_STORE_USER_ID']
+    end
+
+    def set_user_schema!
+      Apartment::Tenant.switch! "user_schema_#{current_api_user_id}"
     end
 
     def validate_api_client!

@@ -12,10 +12,9 @@ gem 'rake', '~> 10.1.0'
 gem 'bcrypt', '~> 3.1.5'
 gem 'pg', '~> 0.15'
 gem 'unicorn', '~> 4.6.2'
+gem 'virtus'
 gem 'will_paginate'
 gem 'warden'
-
-gem 'data_store_client', git: 'git@github.com:vdizzle/data_store_client.git', branch: 'develop'
 
 group :development do
   gem 'tux', '~> 0.3.0'
