@@ -10,7 +10,9 @@
   1. `export DATABASE_NAME=<<db_name>>`
   2. `export DATABASE_USERNAME=<<db_username>>`
   3. `export DATABASE_PASSWORD=<<db_password>>`
-5. Run `bundle exec rake db:migrate` (if running the app first time)
+5. If running the app first time
+    1. Run `bundle`
+    2. Run `bundle exec rake db:create db:migrate` 
 6. Create an API key, if you already haven't, as:
     1. `bundle exec irb` (this will take you to irb console)
     2. In irb console do the following:
