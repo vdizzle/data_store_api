@@ -1,7 +1,7 @@
 # Setting up Data Store API
 
 1. Clone the repo as `git clone git@github.com:vdizzle/data_store_api.git`
-2. Switch to `develop` branch as `git co develop`
+2. Switch to `develop` branch as `git checkout develop`
 3. In the project folder, create a folder `tmp` with sub-folders `pids` and `sockets`
 4. Create nginx conf file (Assuming you have already installed nginx)
     In Linux, create the nginx conf file in /etc/nginx/sites-enabled.
