@@ -25,9 +25,11 @@ ActiveRecord::Schema.define(version: 20150526001) do
   add_index "api_keys", ["key"], name: "index_api_keys_on_key", unique: true, using: :btree
 
   create_table "raw_uploads", force: :cascade do |t|
-    t.string   "filename",               null: false
-    t.text     "content",                null: false
+    t.string   "filename",                null: false
+    t.text     "content",                 null: false
     t.integer  "size",       default: 0
+    t.string   "table_name", default: ""
+    t.string   "meta_info",  default: ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end
