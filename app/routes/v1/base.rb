@@ -15,13 +15,23 @@ module Routes
       pass if %w(auth).include? request.path_info.split('/')[1]
 
       bad_request! 'Invalid API version' unless requested_api_version =~ /^1(\.?\d?)*/
-      assert_header! 'HTTP_X_DATA_STORE_API_KEY'
+      assert_header! 'HTTP_X_DATA_STORE_API_KEY', 'HTTP_X_DATA_STORE_USER_ID'
       validate_api_client!
       set_user_schema!
     end
 
     error Sinatra::NotFound do
       halt 404
+    end
+
+    error ActiveRecord::RecordNotFound do
+      halt(404, { errors: ['Record Not Found!'] }.to_json)
+    end
+
+    configure :test do
+      get '/v1-route-check' do
+        json({ status: 'ok' })
+      end
     end
 
     protected
@@ -32,11 +42,18 @@ module Routes
 
     def current_api_user_id
       assert_header! 'HTTP_X_DATA_STORE_USER_ID'
-      request.env['HTTP_X_DATA_STORE_USER_ID']
+      user_id = request.env['HTTP_X_DATA_STORE_USER_ID']
+      User.find(user_id).id
     end
 
     def set_user_schema!
-      Apartment::Tenant.switch! "user_schema_#{current_api_user_id}"
+      user_schema = "user_schema_#{current_api_user_id}"
+      begin
+        Apartment::Tenant.switch!(user_schema)
+      rescue Apartment::TenantNotFound
+        Apartment::Tenant.create(user_schema)
+        Apartment::Tenant.switch!(user_schema)
+      end
     end
 
     def validate_api_client!
@@ -58,7 +75,7 @@ module Routes
 
     def assert_header!(*headers)
       headers.each do |header|
-        bad_request! "Invalid Header : #{header}" if env[header].blank?
+        bad_request! "Missing Header: #{header}" if env[header].blank?
       end
     end
 
