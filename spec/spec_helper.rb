@@ -1,4 +1,4 @@
-ENV['RACK'] = 'test'
+ENV['RACK_ENV'] = 'test'
 
 require './app'
 

@@ -37,7 +37,8 @@ module Routes
           head = tail + "\n".length
         end
         tail = file_content.index("\r\n", head + 1) + "\n".length
-        lines << file_content[head..tail]
+        line = file_content[head..tail]
+        lines << line[0..line.length - "\r\n".length].split(',')
       end
       lines
     end

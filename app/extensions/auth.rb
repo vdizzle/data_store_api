@@ -35,6 +35,14 @@ module Extensions
 
       app.post '/auth/login' do
         env['warden'].authenticate!
+        user_id = session['warden.user.default.key']
+        user_schema = "user_schema_#{user_id}"
+        begin
+          Apartment::Tenant.switch!(user_schema)
+        rescue Apartment::TenantNotFound
+          Apartment::Tenant.create(user_schema)
+          Apartment::Tenant.switch!(user_schema)
+        end
         json({
           session_id: session['session_id'],
           current_user_id: session['warden.user.default.key']

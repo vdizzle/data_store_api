@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email
   validates :email, presence: true
+  validates :encrypted_password, presence: true
 
   def password
     @password ||= Password.new(self.encrypted_password)

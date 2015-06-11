@@ -10,9 +10,9 @@
 require 'securerandom'
 
 class ApiKey < ActiveRecord::Base
-  validates :name, presence: true
-  validates :key, presence: true, :uniqueness => true
   attr_protected :key
+  validates :name, presence: true
+  validates :key, presence: true, uniqueness: true
 
   after_initialize { self.key ||= SecureRandom.uuid }
 end
