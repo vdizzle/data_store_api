@@ -26,10 +26,12 @@ ActiveRecord::Schema.define(version: 20150526001) do
 
   create_table "raw_uploads", force: :cascade do |t|
     t.string   "filename",                null: false
+    t.string   "filetype",                null: false
     t.text     "content",                 null: false
-    t.integer  "size",       default: 0
+    t.integer  "line_count", default: 0,  null: false
+    t.integer  "size",       default: 0,  null: false
     t.string   "table_name", default: ""
-    t.string   "meta_info",  default: ""
+    t.text     "meta_info",  default: ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end

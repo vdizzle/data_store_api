@@ -2,16 +2,35 @@ require 'base64'
 
 module Routes
   class V1::Uploads < V1::Base
-    post '/upload' do
+    get '/uploads' do
+      @uploads = RawUpload.all
+      jbuilder :'uploads/index'
+    end
+
+    get '/uploads/:id' do
+      @upload = RawUpload.find(params[:id])
+      jbuilder :'uploads/show'
+    end
+
+    post '/uploads' do
+      encoded = attachment[:content]['data:text/csv;base64,'.length .. -1]
+      content = Base64.decode64(encoded)
       attributes = {
         filename: attachment[:filename],
-        content: file_content,
+        filetype: attachment[:filetype],
+        content: content,
+        line_count: content.lines.count,
         size: attachment[:size]
       }
 
-      upload = RawUpload.create!(attributes)
+      @upload = RawUpload.create!(attributes)
+      jbuilder :'uploads/create'
+    end
 
-      json({ status: 'ok', upload_id: upload.id, file_sample: file_sample })
+    delete '/uploads/:id' do
+      content_type :json
+      RawUpload.find(params[:id]).destroy
+      json({ status: 'ok' })
     end
 
     private
@@ -19,28 +38,6 @@ module Routes
 
     def attachment
       json_params[:attachment]
-    end
-
-    def file_content
-      @file_content ||= Base64.decode64(
-        attachment[:content]['data:text/csv;base64,'.length .. -1])
-    end
-
-    def file_sample
-      lines = []
-      head = 0
-      tail = 0
-      while lines.count < 20
-        if lines.count == 0
-          head = 0
-        else
-          head = tail + "\n".length
-        end
-        tail = file_content.index("\r\n", head + 1) + "\n".length
-        line = file_content[head..tail]
-        lines << line[0..line.length - "\r\n".length].split(',')
-      end
-      lines
     end
   end
 end

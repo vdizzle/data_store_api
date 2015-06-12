@@ -27,6 +27,10 @@ RSpec.configure do |config|
   end
 
   config.after do
+    User.all.each do |user|
+      Apartment::Tenant.drop "user_schema_#{user.id}" #rescue false
+      Apartment::Tenant.create "user_schema_#{user.id}" #rescue false
+    end
     DatabaseCleaner.clean
   end
 
