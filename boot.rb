@@ -1,4 +1,4 @@
-ENV['RACK'] ||= 'development'
+ENV['RACK_ENV'] ||= 'development'
 ENV['APP_ROOT'] ||= File.expand_path(File.dirname(__FILE__))
 
 $LOAD_PATH.unshift(File.join(ENV['APP_ROOT'], 'lib'))
