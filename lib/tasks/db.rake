@@ -5,7 +5,7 @@ namespace :db do
     require 'yaml'
     require 'erb'
     yaml = ERB.new(File.read('config/database.yml')).result
-    @config = YAML.load(yaml).fetch(ENV['RACK'])
+    @config = YAML.load(yaml).fetch(ENV['RACK_ENV'])
     puts "Configuration - #{@config}"
   end
 
@@ -71,7 +71,7 @@ namespace :db do
   namespace :test do
     desc 'Prepare for test'
     task :prepare do
-      ENV['RACK'] = 'test'
+      ENV['RACK_ENV'] = 'test'
       Rake::Task['db:configuration'].invoke
       Rake::Task['db:schema:load'].invoke
     end
