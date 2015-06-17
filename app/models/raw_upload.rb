@@ -45,13 +45,13 @@ class RawUpload < ActiveRecord::Base
     data
   end
 
-  def split_to_row(line, downcase = false)
+  def split_to_row(line, header = false)
     line.gsub("\r\n", '').
          gsub("\n", '').
          split(',').
          map do |w|
            w.strip!
-           w.downcase! if downcase
+           w = w.titleize if header
            w
          end
   end
