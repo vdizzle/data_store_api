@@ -25,16 +25,34 @@ class RawUpload < ActiveRecord::Base
   end
 
   def sample(line_count = 20)
-    lines = []
+    data = []
+    headers = split_to_row(content.lines.first, true)
     sample_line_count = [content.lines.count, line_count].min
-    content.lines do |line|
-      lines << line.
-                 gsub("\r\n", '').
-                 gsub("\n", '').
-                 split(',').
-                 map { |w| w.strip }
-      break if lines.count == sample_line_count
+    content.lines.each do |line|
+      row = split_to_row(line)
+      data << formatted_row(row, headers)
+      break if data.count == sample_line_count
     end
-    lines
+    data.delete_at(0)
+    data
+  end
+
+  def formatted_row(row, headers)
+    data = {}
+    headers.zip(row).each do |key, value|
+      data[key] = value
+    end
+    data
+  end
+
+  def split_to_row(line, downcase = false)
+    line.gsub("\r\n", '').
+         gsub("\n", '').
+         split(',').
+         map do |w|
+           w.strip!
+           w.downcase! if downcase
+           w
+         end
   end
 end
