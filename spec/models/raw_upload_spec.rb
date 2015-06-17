@@ -28,9 +28,8 @@ describe RawUpload do
     it 'should return an array of array for each csv row' do
       raw_upload = create(:raw_upload)
       sample = raw_upload.sample
-      expect(sample[0]).to eq(['Name', 'Email', 'Address'])
-      expect(sample[1]).to eq(['Winston Churchill', 'wc@gmail.com', 'awesome'])
-      expect(sample[2]).to eq(['Adolf Hitler', 'ah@gmail.com', 'hell'])
+      expect(sample[0]).to eq({ 'name' => 'Winston Churchill', 'email' => 'wc@gmail.com', 'address' => 'awesome' })
+      expect(sample[1]).to eq({ 'name' => 'Adolf Hitler', 'email' => 'ah@gmail.com', 'address' => 'hell' })
     end
   end
 end
