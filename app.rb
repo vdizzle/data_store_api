@@ -37,6 +37,7 @@ module DataStoreApi
 
     use Rack::CommonLogger
     use Routes::Health
+    use Routes::V1::MetaInfo
     use Routes::V1::Uploads
   end
 end
